@@ -41,19 +41,13 @@ router.post('/compose', (req, res) => {
 router.get('/posts/:blogTitle', (req, res) => {
   /** @namespace req.params.blogTitle */
   const blogTitle = _.kebabCase(req.params.blogTitle)
-  let postsTitle = 'Uh oh!'
-  let postsPost = 'No blog found!'
-
   posts.forEach((post) => {
     if (blogTitle === _.kebabCase(post.title)) {
-      postsTitle = post.title
-      postsPost = post.post
+      res.render('post', {
+        title: post.title,
+        post: post.post,
+      })
     }
-  })
-
-  res.render('post', {
-    title: postsTitle,
-    post: postsPost,
   })
 })
 
