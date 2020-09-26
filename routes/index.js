@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const path = require('path')
+const _ = require('lodash')
 const lipsum = require(path.join(__dirname, '..', 'lipsum.js'))
 
 const posts = []
@@ -35,6 +36,25 @@ router.post('/compose', (req, res) => {
   }
   posts.push(post)
   res.redirect('/')
+})
+
+router.get('/posts/:blogTitle', (req, res) => {
+  /** @namespace req.params.blogTitle */
+  const blogTitle = _.kebabCase(req.params.blogTitle)
+  let postsTitle = 'Uh oh!'
+  let postsPost = 'No blog found!'
+
+  posts.forEach((post) => {
+    if (blogTitle === _.kebabCase(post.title)) {
+      postsTitle = post.title
+      postsPost = post.post
+    }
+  })
+
+  res.render('post', {
+    title: postsTitle,
+    post: postsPost,
+  })
 })
 
 module.exports = router
